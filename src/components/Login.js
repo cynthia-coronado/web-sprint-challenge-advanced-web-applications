@@ -7,8 +7,8 @@ class Login extends React.Component  {
         credentials: {
             username: '',
             password: '',
-            errorMessage: '',
-        }
+        },
+        errorMessage: '',
     }
     handleChange = event => {
         this.setState({
@@ -29,6 +29,9 @@ class Login extends React.Component  {
         })
         .catch(err => {
             console.log(err.response.data);
+            this.setState({
+                errorMessage: err.response.data
+            })
         })
 
     }
@@ -55,8 +58,8 @@ class Login extends React.Component  {
                     onChange = {this.handleChange}
                     />
                     <Button id = 'submit'>Log in</Button>
+                    <p id = 'error'>{this.errorMessage}</p>
                 </FormGroup>
-                <p id = 'error'>{this.state.errorMessage}</p>
             </Label>
         </ModalContainer>
     </ComponentContainer>);
