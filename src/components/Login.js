@@ -1,14 +1,66 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios'
 
-const Login = () => {
-    
-    return(<ComponentContainer>
+class Login extends React.Component  {
+    state = {
+        credentials: {
+            username: '',
+            password: '',
+            errorMessage: '',
+        }
+    }
+    handleChange = event => {
+        this.setState({
+            credentials: {
+                ...this.state.credentials,
+                [event.target.name]:event.target.value
+            }
+        })
+    }
+    login = event => {
+        event.preventDefault()
+        axios 
+        .post('http://localhost:5000/api/login', this.state.credentials)
+        .then(response => {
+            console.log(response);
+            localStorage.setItem('token', response.data)
+            this.props.history.push('/view')
+        })
+        .catch(err => {
+            console.log(err.response.data);
+        })
+
+    }
+    render() {
+    return(
+    <ComponentContainer>
         <ModalContainer>
             <h1>Welcome to Blogger Pro</h1>
             <h2>Please enter your account information.</h2>
+            <Label>
+                <FormGroup onSubmit = {this.login} >
+                    <Input
+                    type = 'text'
+                    id = 'username'
+                    name = 'username'
+                    value = {this.state.credentials.username}
+                    onChange = {this.handleChange}
+                    />
+                    <Input 
+                    type = 'text'
+                    id = 'password'
+                    name = 'password'
+                    value = {this.state.credentials.password}
+                    onChange = {this.handleChange}
+                    />
+                    <Button id = 'submit'>Log in</Button>
+                </FormGroup>
+                <p id = 'error'>{this.state.errorMessage}</p>
+            </Label>
         </ModalContainer>
     </ComponentContainer>);
+    }
 }
 
 export default Login;
