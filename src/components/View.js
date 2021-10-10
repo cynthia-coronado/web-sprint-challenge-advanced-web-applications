@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Article from './Article';
 import EditForm from './EditForm';
 import articleService from '../services/articleServices'
-// import axiosWithAuth from '../utils/axiosWithAuth'
+import axiosWithAuth from '../utils/axiosWithAuth';
 
 const View = (props) => {
     const [articles, setArticles] = useState([]);
@@ -24,6 +24,17 @@ const View = (props) => {
     // console.log(articles);
 
     const handleDelete = (id) => {
+        console.log('clicked delete');
+        axiosWithAuth()
+        .delete(`/articles/${id}`)
+        .then(response => {
+            console.log(response);
+            setArticles(response.data)
+            props.history.push('/view')
+        })
+        .catch(error => {
+            console.log(error);
+        })
     }
 
     const handleEdit = (article) => {
