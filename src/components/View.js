@@ -14,7 +14,7 @@ const View = (props) => {
     useEffect(() => {
         articleService()
         .then(response => {
-            console.log(response);
+            // console.log(response);
             setArticles(response.data) 
         })
         .catch(error => {
@@ -28,7 +28,7 @@ const View = (props) => {
         axiosWithAuth()
         .delete(`/articles/${id}`)
         .then(response => {
-            console.log(response);
+            // console.log(response);
             setArticles(response.data)
             props.history.push('/view')
         })
@@ -41,7 +41,7 @@ const View = (props) => {
        axiosWithAuth()
        .put(`/articles/${editId}`, article)
        .then(response => {
-           console.log('view edit', response);
+        //    console.log('view edit', response);
            setArticles(response.data)
            props.history.push('/view')
        })

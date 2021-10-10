@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import credentials from '../mocks/credentials';
 // import axios from 'axios'
 import axiosWithAuth from '../utils/axiosWithAuth'
 
@@ -24,13 +25,17 @@ class Login extends React.Component  {
         axiosWithAuth()
         .post('/login', this.state.credentials)
         .then(response => {
-            console.log(response.data);
+            // console.log(response.data);
             localStorage.setItem('token', response.data.token)
+            this.setState({
+                errorMessage: ''
+            })
             this.props.history.push('/view')
         })
         .catch(err => {
-            console.log(err.response.data);
+            // console.log(err.response.data);
             this.setState({
+                ...this.state,
                 errorMessage: err.response.data
             })
         })
@@ -42,8 +47,9 @@ class Login extends React.Component  {
         <ModalContainer>
             <h1>Welcome to Blogger Pro</h1>
             <h2>Please enter your account information.</h2>
-            <Label>
+            <div>
                 <FormGroup onSubmit = {this.login} >
+                <Label htmlFor = 'username'>Username</Label>
                     <Input
                     type = 'text'
                     id = 'username'
@@ -51,17 +57,18 @@ class Login extends React.Component  {
                     value = {this.state.credentials.username}
                     onChange = {this.handleChange}
                     />
+                    <Label htmlFor='password'>Password</Label>
                     <Input 
-                    type = 'text'
+                    type = 'password'
                     id = 'password'
                     name = 'password'
                     value = {this.state.credentials.password}
                     onChange = {this.handleChange}
                     />
                     <Button id = 'submit'>Log in</Button>
-                    <p id = 'error'>{this.errorMessage}</p>
                 </FormGroup>
-            </Label>
+            {this.state.errorMessage && <p id = 'error'>{this.errorMessage}Credentials Not Correct</p>}
+        </div>
         </ModalContainer>
     </ComponentContainer>);
     }
