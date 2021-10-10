@@ -1,14 +1,77 @@
 import React from 'react';
 import styled from 'styled-components';
+import credentials from '../mocks/credentials';
+// import axios from 'axios'
+import axiosWithAuth from '../utils/axiosWithAuth'
 
-const Login = () => {
-    
-    return(<ComponentContainer>
+class Login extends React.Component  {
+    state = {
+        credentials: {
+            username: '',
+            password: '',
+        },
+        errorMessage: '',
+    }
+    handleChange = event => {
+        this.setState({
+            credentials: {
+                ...this.state.credentials,
+                [event.target.name]:event.target.value
+            }
+        })
+    }
+    login = event => {
+        event.preventDefault()
+        axiosWithAuth()
+        .post('/login', this.state.credentials)
+        .then(response => {
+            // console.log(response.data);
+            localStorage.setItem('token', response.data.token)
+            this.setState({
+                errorMessage: ''
+            })
+            this.props.history.push('/view')
+        })
+        .catch(err => {
+            // console.log(err.response.data);
+            this.setState({
+                ...this.state,
+                errorMessage: err.response.data
+            })
+        })
+
+    }
+    render() {
+    return(
+    <ComponentContainer>
         <ModalContainer>
             <h1>Welcome to Blogger Pro</h1>
             <h2>Please enter your account information.</h2>
+            <div>
+                <FormGroup onSubmit = {this.login} >
+                <Label htmlFor = 'username'>Username</Label>
+                    <Input
+                    type = 'text'
+                    id = 'username'
+                    name = 'username'
+                    value = {this.state.credentials.username}
+                    onChange = {this.handleChange}
+                    />
+                    <Label htmlFor='password'>Password</Label>
+                    <Input 
+                    type = 'password'
+                    id = 'password'
+                    name = 'password'
+                    value = {this.state.credentials.password}
+                    onChange = {this.handleChange}
+                    />
+                    <Button id = 'submit'>Log in</Button>
+                </FormGroup>
+            {this.state.errorMessage && <p id = 'error'>{this.errorMessage}Credentials Not Correct</p>}
+        </div>
         </ModalContainer>
     </ComponentContainer>);
+    }
 }
 
 export default Login;
